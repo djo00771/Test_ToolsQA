@@ -1,4 +1,9 @@
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage
+import random
+import time
+
+import pytest
+
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage
 
 
 class TestElements:
@@ -6,6 +11,7 @@ class TestElements:
 
         def test_text_box(self, driver):
             """ Тест формы Text Box"""
+
             text_box_page = TextBoxPage(driver, 'https://demoqa.com/text-box')
             text_box_page.open()
             full_name, email, current_address, permanent_address = text_box_page.fill_all_fields()
@@ -19,6 +25,7 @@ class TestElements:
 
         def test_check_box(self, driver):
             """ Тест формы с чек боксами """
+
             check_box_page = CheckBoxPage(driver, 'https://demoqa.com/checkbox')
             check_box_page.open()
             check_box_page.open_full_list()
@@ -29,7 +36,10 @@ class TestElements:
 
     class TestRadioButton:
 
+        @pytest.mark.xfail(reason="bug report")
         def test_radio_button(self, driver):
+            """ Тест кнопок """
+
             radio_button_page = RadioButtonPage(driver, 'https://demoqa.com/radio-button')
             radio_button_page.open()
             radio_button_page.click_on_the_radio_button('yes')
@@ -42,4 +52,23 @@ class TestElements:
             assert output_impressive == 'Impressive', "'Impressive' have not been selected"
             assert output_no == 'No', "'No' have not been selected"
 
+    class TestWebTable:
 
+        def test_web_table_add_person(self, driver):
+            """ Тест добавления данных в таблицу """
+
+            web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
+            web_table_page.open()
+            new_person = web_table_page.add_new_person()
+            table_result = web_table_page.check_added_person()
+            assert new_person in table_result, ''
+
+        def test_web_table_search_person(self, driver):
+            """ Тест поиска данных в таблице """
+
+            web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
+            web_table_page.open()
+            key_word = web_table_page.add_new_person()[random.randint(0, 5)]
+            web_table_page.search_come_person(key_word)
+            table_result = web_table_page.check_search_person()
+            assert key_word in table_result, 'the person not found'

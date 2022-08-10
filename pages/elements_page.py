@@ -1,18 +1,19 @@
 import random
 import time
-
-import locators.element_page_locators
 from generator.generator import generated_person
-from locators.element_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonPageLocators
+from locators.element_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonPageLocators, \
+    WebTablePageLocators
 from pages.base_page import BasePage
 
 
 class TextBoxPage(BasePage):
     """ Элементы страницы Text Box"""
+
     locators = TextBoxPageLocators()
 
     def fill_all_fields(self):
-        """ Заполнить и отправить """
+        """ Заполнить и отправить поля формы Text Box """
+
         person_info = next(generated_person())
         full_name = person_info.full_name
         email = person_info.email
@@ -27,6 +28,7 @@ class TextBoxPage(BasePage):
 
     def check_filled_form(self):
         """ Проверка из ответа """
+
         full_name = self.is_present(self.locators.CREATED_FULL_NAME).text.split(':')[1]
         email = self.is_present(self.locators.CREATED_EMAIL).text.split(':')[1]
         current_address = self.is_present(self.locators.CREATED_CURRENT_ADDRESS).text.split(':')[1]
@@ -36,14 +38,17 @@ class TextBoxPage(BasePage):
 
 class CheckBoxPage(BasePage):
     """ Элементы страницы Check Box"""
+
     locators = CheckBoxPageLocators()
 
     def open_full_list(self):
         """ Открыть все чек боксы """
+
         self.is_visible(self.locators.EXPAND_ALL_BUTTON).click()
 
     def click_random_checkbox(self):
         """ Кликнуть по чек боксам рандомно """
+
         item_list = self.is_all_visible(self.locators.ITEM_LIST)
         count = 21
         while count != 0:
@@ -57,6 +62,7 @@ class CheckBoxPage(BasePage):
 
     def get_checked_checkboxes(self):
         """ Вернуть результат клика """
+
         checked_list = self.is_all_present(self.locators.CHECKED_ITEMS)
         data = []
         for box in checked_list:
@@ -66,6 +72,7 @@ class CheckBoxPage(BasePage):
 
     def get_output_result(self):
         """ Вернуть результат вывода """
+
         result_list = self.is_all_present(self.locators.OUTPUT_RESULT)
         data = []
         for item in result_list:
@@ -74,11 +81,13 @@ class CheckBoxPage(BasePage):
 
 
 class RadioButtonPage(BasePage):
+    """ Элементы страницы Radio Button """
 
     locators = RadioButtonPageLocators()
 
     def click_on_the_radio_button(self, choice):
         """ Кликнуть по кнопкам """
+
         choices = {'yes': self.locators.YES_RADIOBUTTON,
                    'impressive': self.locators.IMPRESSIVE_RADIOBUTTON,
                    'no': self.locators.NO_RADIOBUTTON}
@@ -86,4 +95,52 @@ class RadioButtonPage(BasePage):
         self.is_visible(choices[choice]).click()
 
     def get_output_result(self):
+        """ Вернуть результат клика """
+
         return self.is_present(self.locators.OUTPUT_RESULT).text
+
+
+class WebTablePage(BasePage):
+    """ Элементы страницы Web Table """
+
+    locators = WebTablePageLocators()
+
+    def add_new_person(self):
+        """ Заполнить данными человека форму Web Table """
+
+        count = 1
+        while count != 0:
+            person_info = next(generated_person())
+            first_name = person_info.first_name
+            last_name = person_info.last_name
+            email = person_info.email
+            age = person_info.age
+            salary = person_info.salary
+            department = person_info.department
+            self.is_visible(self.locators.ADD_BUTTON).click()
+            self.is_visible(self.locators.FIRSTNAME_INPUT).send_keys(first_name)
+            self.is_visible(self.locators.LASTNAME_INPUT).send_keys(last_name)
+            self.is_visible(self.locators.EMAIL_INPUT).send_keys(email)
+            self.is_visible(self.locators.AGE_INPUT).send_keys(age)
+            self.is_visible(self.locators.SALARY_INPUT).send_keys(salary)
+            self.is_visible(self.locators.DEPARTMENT_INPUT).send_keys(department)
+            self.is_visible(self.locators.SUBMIT_BUTTON).click()
+            count -= 1
+            return [first_name, last_name, str(age), email, str(salary), department]
+
+    def check_added_person(self):
+        """ Проверка заполненной формы """
+
+        people_list = self.is_all_present(self.locators.FULL_PEOPLE_LIST)
+        data = []
+        for item in people_list:
+            data.append(item.text.splitlines())
+        return data
+
+    def search_come_person(self, key_word):
+        self.is_present(self.locators.SEARCH_INPUT).send_keys(key_word)
+
+    def check_search_person(self):
+        delete_button = self.is_present(self.locators.DELETE_BUTTON)
+        row = delete_button.find_element("xpath", self.locators.ROW_PARENT)
+        return row.text.splitlines()
