@@ -1,8 +1,6 @@
 import random
 import time
-
 import pytest
-
 from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage
 
 
@@ -16,10 +14,10 @@ class TestElements:
             text_box_page.open()
             full_name, email, current_address, permanent_address = text_box_page.fill_all_fields()
             output_name, output_email, output_current, output_per_addr = text_box_page.check_filled_form()
-            assert full_name == output_name, 'the full_name does not match'
-            assert email == output_email, 'the email does not match'
-            assert current_address == output_current, 'the current_address does not match'
-            assert permanent_address == output_per_addr, 'the permanent_address does not match'
+            assert full_name == output_name, 'full_name не совпадает'
+            assert email == output_email, 'email не совпадает'
+            assert current_address == output_current, 'current_address не совпадает'
+            assert permanent_address == output_per_addr, 'permanent_address не совпадает'
 
     class TestCheckBox:
 
@@ -32,7 +30,7 @@ class TestElements:
             check_box_page.click_random_checkbox()
             input_checkbox = check_box_page.get_checked_checkboxes()
             output_result = check_box_page.get_output_result()
-            assert input_checkbox == output_result, 'checkboxes have been selected'
+            assert input_checkbox == output_result, 'Флажки небыли выбраны'
 
     class TestRadioButton:
 
@@ -48,14 +46,14 @@ class TestElements:
             output_impressive = radio_button_page.get_output_result()
             radio_button_page.click_on_the_radio_button('no')
             output_no = radio_button_page.get_output_result()
-            assert output_yes == 'Yes', "'Yes' have not been selected"
-            assert output_impressive == 'Impressive', "'Impressive' have not been selected"
-            assert output_no == 'No', "'No' have not been selected"
+            assert output_yes == 'Yes', "'Yes' небыли выбраны"
+            assert output_impressive == 'Impressive', "'Impressive' небыли выбраны"
+            assert output_no == 'No', "'No' небыли выбраны"
 
     class TestWebTable:
 
         def test_web_table_add_person(self, driver):
-            """ Тест добавления данных в таблицу """
+            """ Тест добавления нового пользователя """
 
             web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
             web_table_page.open()
@@ -64,11 +62,39 @@ class TestElements:
             assert new_person in table_result, ''
 
         def test_web_table_search_person(self, driver):
-            """ Тест поиска данных в таблице """
+            """ Тест поиска пользователя """
 
             web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
             web_table_page.open()
             key_word = web_table_page.add_new_person()[random.randint(0, 5)]
             web_table_page.search_come_person(key_word)
             table_result = web_table_page.check_search_person()
-            assert key_word in table_result, 'the person not found'
+            assert key_word in table_result, 'Пользователь не найден'
+
+        def test_web_table_update_person_info(self, driver):
+            """ Тест обновления информации о пользователе """
+
+            web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
+            web_table_page.open()
+            lastname = web_table_page.add_new_person()[1]
+            web_table_page.search_come_person(lastname)
+            age = web_table_page.update_person_info()
+            row = web_table_page.check_search_person()
+            assert age in row, 'Пользователя нет в таблице'
+
+        def test_web_table_delete_person_info(self, driver):
+            """ Тест обновления информации о пользователе """
+
+            web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
+            web_table_page.open()
+            email = web_table_page.add_new_person()[3]
+            web_table_page.search_come_person(email)
+            web_table_page.delete_person()
+            text = web_table_page.check_delete()
+            assert text == 'No rows found'
+
+        def test_web_table_change_count_rows(self, driver):
+            web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
+            web_table_page.open()
+            count = web_table_page.select_up_to_come_rows()
+            assert count == [5, 10, 20, 25]

@@ -1,5 +1,8 @@
 import random
 import time
+
+from selenium.webdriver.common.by import By
+
 from generator.generator import generated_person
 from locators.element_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonPageLocators, \
     WebTablePageLocators
@@ -106,7 +109,7 @@ class WebTablePage(BasePage):
     locators = WebTablePageLocators()
 
     def add_new_person(self):
-        """ Заполнить данными человека форму Web Table """
+        """ Добавление нового пользователя в форму Web Table """
 
         count = 1
         while count != 0:
@@ -129,7 +132,7 @@ class WebTablePage(BasePage):
             return [first_name, last_name, str(age), email, str(salary), department]
 
     def check_added_person(self):
-        """ Проверка заполненной формы """
+        """ Проверка результатов добавления пользователя """
 
         people_list = self.is_all_present(self.locators.FULL_PEOPLE_LIST)
         data = []
@@ -138,9 +141,50 @@ class WebTablePage(BasePage):
         return data
 
     def search_come_person(self, key_word):
+        """ Поиск пользователя """
+
         self.is_present(self.locators.SEARCH_INPUT).send_keys(key_word)
 
     def check_search_person(self):
+        """ Проверка результатов поиска пользователя """
+
         delete_button = self.is_present(self.locators.DELETE_BUTTON)
         row = delete_button.find_element("xpath", self.locators.ROW_PARENT)
         return row.text.splitlines()
+
+    def update_person_info(self):
+        """ Обновления информации о пользователе """
+
+        person_info = next(generated_person())
+        age = person_info.age
+        self.is_visible(self.locators.UPDATE_BUTTON).click()
+        self.is_visible(self.locators.AGE_INPUT).clear()
+        self.is_visible(self.locators.AGE_INPUT).send_keys(age)
+        self.is_visible(self.locators.SUBMIT_BUTTON).click()
+        return str(age)
+
+    def delete_person(self):
+        """ Удаление пользователя """
+
+        self.is_visible(self.locators.DELETE_BUTTON).click()
+
+    def check_delete(self):
+        """ Проверка удаления пользователя """
+
+        return self.is_present(self.locators.NO_ROWS_FOUND).text
+
+    def select_up_to_come_rows(self):
+
+        count = [5, 10, 20, 25]
+        data = []
+        for x in count:
+            count_row_button = self.is_visible(self.locators.COUNT_ROW_LIST)
+            self.scroll_to_element(count_row_button)
+            count_row_button.click()
+            self.is_visible((By.CSS_SELECTOR, f'option[value="{x}"]')).click()
+            data.append(self.check_count_rows())
+        return data
+
+    def check_count_rows(self):
+        list_round = self.is_all_present(self.locators.FULL_PEOPLE_LIST)
+        return len(list_round)
