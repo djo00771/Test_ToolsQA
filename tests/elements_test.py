@@ -1,7 +1,7 @@
 import random
 import time
 import pytest
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonsPage
 
 
 class TestElements:
@@ -94,7 +94,23 @@ class TestElements:
             assert text == 'No rows found'
 
         def test_web_table_change_count_rows(self, driver):
+            """ Тест проверки количества строк """
+
             web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
             web_table_page.open()
             count = web_table_page.select_up_to_come_rows()
             assert count == [5, 10, 20, 25]
+
+    class TestButtonPage:
+
+        def test_different_click_on_the_buttons(self, driver):
+            """ Тест проверки клика по кнопкам """
+
+            buttons_page = ButtonsPage(driver, 'https://demoqa.com/buttons')
+            buttons_page.open()
+            double = buttons_page.click_on_different_button('double')
+            right = buttons_page.click_on_different_button('right')
+            click_me = buttons_page.click_on_different_button('click')
+            assert double == 'You have done a double click', 'Кнопка double click не нажата'
+            assert right == 'You have done a right click', 'Кнопка right click не нажата'
+            assert click_me == 'You have done a dynamic click', 'Кнопка dynamic click не нажата'
