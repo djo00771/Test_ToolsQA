@@ -1,11 +1,8 @@
 import random
 import time
-
-from selenium.webdriver.common.by import By
-
+import requests
 from generator.generator import generated_person
-from locators.element_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonPageLocators, \
-    WebTablePageLocators, ButtonsPageLocators
+from locators.element_page_locators import *
 from pages.base_page import BasePage
 
 
@@ -191,6 +188,7 @@ class WebTablePage(BasePage):
 
 
 class ButtonsPage(BasePage):
+    """Элементы страницы Buttons """
 
     locators = ButtonsPageLocators()
 
@@ -213,3 +211,28 @@ class ButtonsPage(BasePage):
         """ Возврат результата кликов """
 
         return self.is_present(element).text
+
+
+class LinksPage(BasePage):
+    """Элементы страницы Links """
+
+    locators = LinksPageLocators()
+
+    def check_new_tab_simple_link(self):
+        simple_link = self.is_visible(self.locators.HOME_LINK)
+        link_href = simple_link.get_attribute('href')
+        request = requests.get(link_href)
+        if request.status_code == 200:
+            self.click(simple_link)
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            url = self.get_current_url()
+            return link_href, url
+        else:
+            return link_href, request.status_code
+
+    def check_broken_link(self, url):
+        r = requests.get(url)
+        if r.status_code == 200:
+            self.click(self.is_present(self.locators.BAD_REQUEST))
+        else:
+            return r.status_code

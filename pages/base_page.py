@@ -1,6 +1,7 @@
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
+from termcolor import colored
 
 
 class BasePage:
@@ -61,3 +62,25 @@ class BasePage:
         action = ActionChains(self.driver)
         action.context_click(element)
         action.perform()
+
+    def click(self, element):
+        """ Клик левой кнопкой мыши """
+
+        action = ActionChains(self.driver)
+        action.click(element)
+        action.perform()
+
+    def get_current_url(self):
+        """ Получить адрес текущей страницы. """
+
+        return self.driver.current_url
+
+    def get_page_source(self):
+        """ Выдать исходный код страницы. """
+
+        source = ''
+        try:
+            source = self.driver.page_source
+        except:
+            print(colored('Can not get page source', 'red'))
+        return source

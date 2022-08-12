@@ -1,7 +1,7 @@
 import random
 import time
 import pytest
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonsPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonsPage, LinksPage
 
 
 class TestElements:
@@ -114,3 +114,21 @@ class TestElements:
             assert double == 'You have done a double click', 'Кнопка double click не нажата'
             assert right == 'You have done a right click', 'Кнопка right click не нажата'
             assert click_me == 'You have done a dynamic click', 'Кнопка dynamic click не нажата'
+
+    class TestLinksPage:
+
+        def test_check_link(self, driver):
+            """ Тест проверки рабочей ссылки """
+
+            links_page = LinksPage(driver, 'https://demoqa.com/links')
+            links_page.open()
+            href_link, current_url = links_page.check_new_tab_simple_link()
+            assert href_link == current_url, "Не корректный url либо битая ссылка"
+
+        def test_broken_link(self, driver):
+            """ Тест ссылки отправляющей api запрос с кодом 400 """
+
+            links_page = LinksPage(driver, 'https://demoqa.com/links')
+            links_page.open()
+            response_code = links_page.check_broken_link('https://demoqa.com/bad-request')
+            assert response_code == 400, "Не корректный url либо битая ссылка"
