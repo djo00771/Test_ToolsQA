@@ -1,19 +1,19 @@
+import base64
+import os
 import random
 import time
 import requests
-from generator.generator import generated_person
+from generator.generator import generated_person, generated_file
 from locators.element_page_locators import *
 from pages.base_page import BasePage
 
 
 class TextBoxPage(BasePage):
     """ Элементы страницы Text Box"""
-
     locators = TextBoxPageLocators()
 
     def fill_all_fields(self):
         """ Заполнить и отправить поля формы Text Box """
-
         person_info = next(generated_person())
         full_name = person_info.full_name
         email = person_info.email
@@ -28,7 +28,6 @@ class TextBoxPage(BasePage):
 
     def check_filled_form(self):
         """ Проверка из ответа """
-
         full_name = self.is_present(self.locators.CREATED_FULL_NAME).text.split(':')[1]
         email = self.is_present(self.locators.CREATED_EMAIL).text.split(':')[1]
         current_address = self.is_present(self.locators.CREATED_CURRENT_ADDRESS).text.split(':')[1]
@@ -38,17 +37,14 @@ class TextBoxPage(BasePage):
 
 class CheckBoxPage(BasePage):
     """ Элементы страницы Check Box"""
-
     locators = CheckBoxPageLocators()
 
     def open_full_list(self):
         """ Открыть все чек боксы """
-
         self.is_visible(self.locators.EXPAND_ALL_BUTTON).click()
 
     def click_random_checkbox(self):
         """ Кликнуть по чек боксам рандомно """
-
         item_list = self.is_all_visible(self.locators.ITEM_LIST)
         count = 21
         while count != 0:
@@ -62,7 +58,6 @@ class CheckBoxPage(BasePage):
 
     def get_checked_checkboxes(self):
         """ Вернуть результат клика """
-
         checked_list = self.is_all_present(self.locators.CHECKED_ITEMS)
         data = []
         for box in checked_list:
@@ -72,7 +67,6 @@ class CheckBoxPage(BasePage):
 
     def get_output_result(self):
         """ Вернуть результат вывода """
-
         result_list = self.is_all_present(self.locators.OUTPUT_RESULT)
         data = []
         for item in result_list:
@@ -82,12 +76,10 @@ class CheckBoxPage(BasePage):
 
 class RadioButtonPage(BasePage):
     """ Элементы страницы Radio Button """
-
     locators = RadioButtonPageLocators()
 
     def click_on_the_radio_button(self, choice):
         """ Кликнуть по кнопкам """
-
         choices = {'yes': self.locators.YES_RADIOBUTTON,
                    'impressive': self.locators.IMPRESSIVE_RADIOBUTTON,
                    'no': self.locators.NO_RADIOBUTTON}
@@ -96,18 +88,15 @@ class RadioButtonPage(BasePage):
 
     def get_output_result(self):
         """ Вернуть результат клика """
-
         return self.is_present(self.locators.OUTPUT_RESULT).text
 
 
 class WebTablePage(BasePage):
     """ Элементы страницы Web Table """
-
     locators = WebTablePageLocators()
 
     def add_new_person(self):
         """ Добавление нового пользователя в форму Web Table """
-
         count = 1
         while count != 0:
             person_info = next(generated_person())
@@ -130,7 +119,6 @@ class WebTablePage(BasePage):
 
     def check_added_person(self):
         """ Проверка результатов добавления пользователя """
-
         people_list = self.is_all_present(self.locators.FULL_PEOPLE_LIST)
         data = []
         for item in people_list:
@@ -139,19 +127,16 @@ class WebTablePage(BasePage):
 
     def search_come_person(self, key_word):
         """ Поиск пользователя """
-
         self.is_present(self.locators.SEARCH_INPUT).send_keys(key_word)
 
     def check_search_person(self):
         """ Проверка результатов поиска пользователя """
-
         delete_button = self.is_present(self.locators.DELETE_BUTTON)
         row = delete_button.find_element("xpath", self.locators.ROW_PARENT)
         return row.text.splitlines()
 
     def update_person_info(self):
         """ Обновления информации о пользователе """
-
         person_info = next(generated_person())
         age = person_info.age
         self.is_visible(self.locators.UPDATE_BUTTON).click()
@@ -162,16 +147,14 @@ class WebTablePage(BasePage):
 
     def delete_person(self):
         """ Удаление пользователя """
-
         self.is_visible(self.locators.DELETE_BUTTON).click()
 
     def check_delete(self):
         """ Проверка удаления пользователя """
-
         return self.is_present(self.locators.NO_ROWS_FOUND).text
 
     def select_up_to_come_rows(self):
-
+        """ Увеличение количества строк """
         count = [5, 10, 20, 25]
         data = []
         for x in count:
@@ -183,18 +166,17 @@ class WebTablePage(BasePage):
         return data
 
     def check_count_rows(self):
+        """ Проверка фактического количества строк """
         list_round = self.is_all_present(self.locators.FULL_PEOPLE_LIST)
         return len(list_round)
 
 
 class ButtonsPage(BasePage):
     """Элементы страницы Buttons """
-
     locators = ButtonsPageLocators()
 
     def click_on_different_button(self, type_click):
         """ Проверка клика: double click, right click, dynamic click """
-
         if type_click == 'double':
             self.double_click(self.is_visible(self.locators.DOUBLE_CLICK_BUTTON))
             return self.check_click_on_button(self.locators.SUCCESS_DOUBLE)
@@ -209,13 +191,11 @@ class ButtonsPage(BasePage):
 
     def check_click_on_button(self, element):
         """ Возврат результата кликов """
-
         return self.is_present(element).text
 
 
 class LinksPage(BasePage):
     """Элементы страницы Links """
-
     locators = LinksPageLocators()
 
     def check_new_tab_simple_link(self):
@@ -236,3 +216,38 @@ class LinksPage(BasePage):
             self.click(self.is_present(self.locators.BAD_REQUEST))
         else:
             return r.status_code
+
+
+class UploadDownloadFilePage(BasePage):
+    """ Загрузка и выгрузка файла """
+    locators = UploadDownloadFileLocators()
+
+    def upload_file(self):
+        """ Выгрузка """
+        file_name, path = generated_file()
+        self.is_present(self.locators.UPLOAD_FILE).send_keys(path)
+        os.remove(path)
+        text = self.is_present(self.locators.UPLOADED_FILE).text
+        return file_name.split('\\')[-1], text.split('\\')[-1]
+
+    def download_file(self):
+        """ Загрузка """
+        link = self.is_present(self.locators.DOWNLOAD_FILE).get_attribute('href')
+        # декодируем
+        link_b = base64.b64decode(link)
+        # путь по которому мы поместим файл
+        path_name_file = rf'C:\Users\zay-e\PycharmProjects\Test_ToolsQA\filetest{random.randint(0, 500)}.jpg'
+        # Открываем файл для записи
+        with open(path_name_file, 'wb+') as f:
+            # обрезаем лишнее и записываем в переменную
+            offset = link_b.find(b'\xff\xd8')
+            # записываем обрезанное
+            f.write(link_b[offset:])
+            # проверяем что файл существует
+            check_file = os.path.exists(path_name_file)
+            # закрываем файл
+            f.close()
+        # удаляем файл
+        os.remove(path_name_file)
+        return check_file
+
