@@ -3,6 +3,7 @@ import os
 import random
 import time
 import requests
+from selenium.common import TimeoutException
 from generator.generator import generated_person, generated_file
 from locators.element_page_locators import *
 from pages.base_page import BasePage
@@ -233,21 +234,44 @@ class UploadDownloadFilePage(BasePage):
     def download_file(self):
         """ Загрузка """
         link = self.is_present(self.locators.DOWNLOAD_FILE).get_attribute('href')
-        # декодируем
-        link_b = base64.b64decode(link)
+        link_b = base64.b64decode(link)  # декодируем
         # путь по которому мы поместим файл
         path_name_file = rf'C:\Users\zay-e\PycharmProjects\Test_ToolsQA\filetest{random.randint(0, 500)}.jpg'
-        # Открываем файл для записи
-        with open(path_name_file, 'wb+') as f:
-            # обрезаем лишнее и записываем в переменную
-            offset = link_b.find(b'\xff\xd8')
-            # записываем обрезанное
-            f.write(link_b[offset:])
-            # проверяем что файл существует
-            check_file = os.path.exists(path_name_file)
-            # закрываем файл
-            f.close()
-        # удаляем файл
-        os.remove(path_name_file)
+        with open(path_name_file, 'wb+') as f:  # Открываем файл для записи
+            offset = link_b.find(b'\xff\xd8')  # обрезаем лишнее и записываем в переменную
+            f.write(link_b[offset:])  # записываем обрезанное
+            check_file = os.path.exists(path_name_file)  # проверяем что файл существует
+            f.close()  # закрываем файл
+        os.remove(path_name_file)  # удаляем файл
         return check_file
+
+
+class DynamicPropertiesPage(BasePage):
+    """ Изменение цвета и видимость кнопок """
+
+    locators = DynamicPropertiesLocators()
+
+    def check_enable_button(self):
+        """ Проверка clickable """
+        try:
+            self.is_clickable(self.locators.ENABLE_BUTTON, 6)
+        except TimeoutException:
+            return False
+        return True
+
+    def check_change_of_color(self):
+        """ Проверка изменение цвета """
+        color_button = self.is_present(self.locators.COLOR_CHANGE_BUTTON, 6)
+        color_button_before = color_button.value_of_css_property('color')
+        time.sleep(5)
+        color_button_after = color_button.value_of_css_property('color')
+        return color_button_before, color_button_after
+
+    def check_appear_of_button(self):
+        """ Проверка появление через 5 секунд """
+        try:
+            self.is_visible(self.locators.VISIBLE_AFTER_BUTTON, 6)
+        except TimeoutException:
+            return False
+        return True
 
