@@ -82,6 +82,7 @@ class LinksPageLocators:
 
 
 class UploadDownloadFileLocators:
+    """ Локаторы для страницы Upload and Download """
 
     UPLOAD_FILE = (By.CSS_SELECTOR, 'input[id="uploadFile"]')
     UPLOADED_FILE = (By.CSS_SELECTOR, 'p[id="uploadedFilePath"]')
@@ -89,6 +90,7 @@ class UploadDownloadFileLocators:
 
 
 class DynamicPropertiesLocators:
+    """ Локаторы для страницы Dynamic Properties """
 
     COLOR_CHANGE_BUTTON = (By.CSS_SELECTOR, 'button[id="colorChange"]')
     VISIBLE_AFTER_BUTTON = (By.CSS_SELECTOR, 'button[id="visibleAfter"]')

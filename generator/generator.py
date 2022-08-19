@@ -5,7 +5,7 @@ from faker import Faker
 
 
 faker_ru = Faker('ru_RU')
-Faker.seed()
+# Faker.seed()
 
 
 def generated_person():
@@ -19,12 +19,22 @@ def generated_person():
         department=faker_ru.job(),
         current_address=faker_ru.address(),
         permanent_address=faker_ru.address(),
+        mobile=faker_ru.msisdn(),
+        subject='English'
     )
 
 
-def generated_file():
+def generated_file_for_test_elements():
     path = rf'C:\Users\zay-e\PycharmProjects\Test_ToolsQA\filename{random.randint(0, 500)}.txt'
     file = open(path, 'w+')
     file.write(f'Hello World {random.randint(0, 500)}')
     file.close()
     return file.name, path
+
+
+def generated_file_for_test_form():
+    path = rf'C:\Users\zay-e\PycharmProjects\ToolsQA\test{random.randint(10,100)}.txt'
+    file = open(path, 'w')
+    file.write(f'HelloWorld{random.randint(23,100)}')
+    file.close()
+    return path

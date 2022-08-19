@@ -4,13 +4,14 @@ import random
 import time
 import requests
 from selenium.common import TimeoutException
-from generator.generator import generated_person, generated_file
+from generator.generator import generated_person, generated_file_for_test_elements
 from locators.element_page_locators import *
 from pages.base_page import BasePage
 
 
 class TextBoxPage(BasePage):
     """ Элементы страницы Text Box"""
+
     locators = TextBoxPageLocators()
 
     def fill_all_fields(self):
@@ -38,6 +39,7 @@ class TextBoxPage(BasePage):
 
 class CheckBoxPage(BasePage):
     """ Элементы страницы Check Box"""
+
     locators = CheckBoxPageLocators()
 
     def open_full_list(self):
@@ -77,6 +79,7 @@ class CheckBoxPage(BasePage):
 
 class RadioButtonPage(BasePage):
     """ Элементы страницы Radio Button """
+
     locators = RadioButtonPageLocators()
 
     def click_on_the_radio_button(self, choice):
@@ -94,6 +97,7 @@ class RadioButtonPage(BasePage):
 
 class WebTablePage(BasePage):
     """ Элементы страницы Web Table """
+
     locators = WebTablePageLocators()
 
     def add_new_person(self):
@@ -174,6 +178,7 @@ class WebTablePage(BasePage):
 
 class ButtonsPage(BasePage):
     """Элементы страницы Buttons """
+
     locators = ButtonsPageLocators()
 
     def click_on_different_button(self, type_click):
@@ -197,6 +202,7 @@ class ButtonsPage(BasePage):
 
 class LinksPage(BasePage):
     """Элементы страницы Links """
+
     locators = LinksPageLocators()
 
     def check_new_tab_simple_link(self):
@@ -221,11 +227,12 @@ class LinksPage(BasePage):
 
 class UploadDownloadFilePage(BasePage):
     """ Загрузка и выгрузка файла """
+
     locators = UploadDownloadFileLocators()
 
     def upload_file(self):
         """ Выгрузка """
-        file_name, path = generated_file()
+        file_name, path = generated_file_for_test_elements()
         self.is_present(self.locators.UPLOAD_FILE).send_keys(path)
         os.remove(path)
         text = self.is_present(self.locators.UPLOADED_FILE).text
@@ -254,14 +261,14 @@ class DynamicPropertiesPage(BasePage):
     def check_enable_button(self):
         """ Проверка clickable """
         try:
-            self.is_clickable(self.locators.ENABLE_BUTTON, 6)
+            self.is_clickable(self.locators.ENABLE_BUTTON)
         except TimeoutException:
             return False
         return True
 
     def check_change_of_color(self):
         """ Проверка изменение цвета """
-        color_button = self.is_present(self.locators.COLOR_CHANGE_BUTTON, 6)
+        color_button = self.is_present(self.locators.COLOR_CHANGE_BUTTON)
         color_button_before = color_button.value_of_css_property('color')
         time.sleep(5)
         color_button_after = color_button.value_of_css_property('color')
@@ -270,7 +277,7 @@ class DynamicPropertiesPage(BasePage):
     def check_appear_of_button(self):
         """ Проверка появление через 5 секунд """
         try:
-            self.is_visible(self.locators.VISIBLE_AFTER_BUTTON, 6)
+            self.is_visible(self.locators.VISIBLE_AFTER_BUTTON)
         except TimeoutException:
             return False
         return True

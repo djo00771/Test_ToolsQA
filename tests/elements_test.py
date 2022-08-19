@@ -94,7 +94,7 @@ class TestElements:
             count = web_table_page.select_up_to_come_rows()
             assert count == [5, 10, 20, 25]
 
-    class TestButtonPage:
+    class TestButton:
 
         def test_different_click_on_the_buttons(self, driver):
             """ Тест проверки клика по кнопкам """
@@ -107,7 +107,7 @@ class TestElements:
             assert right == 'You have done a right click', 'Кнопка right click не нажата'
             assert click_me == 'You have done a dynamic click', 'Кнопка dynamic click не нажата'
 
-    class TestLinksPage:
+    class TestLinks:
 
         def test_check_link(self, driver):
             """ Тест проверки рабочей ссылки """
@@ -123,7 +123,7 @@ class TestElements:
             response_code = links_page.check_broken_link('https://demoqa.com/bad-request')
             assert response_code == 400, "Не корректный url либо битая ссылка"
 
-    class TestUploadDownloadFilePage:
+    class TestUploadDownloadFile:
 
         def test_upload_file(self, driver):
             """ Тест загрузки файла """
