@@ -15,7 +15,6 @@ class FormPage(BasePage):
         person = next(generated_person())
         path = generated_file_for_test_form()
         self.remove_element()
-        time.sleep(3)
         self.is_visible(self.locators.FIRST_NAME).send_keys(person.first_name)
         self.is_visible(self.locators.LAST_NAME).send_keys(person.last_name)
         self.is_visible(self.locators.EMAIL).send_keys(person.email)
