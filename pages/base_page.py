@@ -76,6 +76,10 @@ class BasePage:
             print(colored('Can not get page source', 'red'))
         return source
 
-    def switch_new_tab(self, new_tab):
+    def switch_new_tab(self, tab):
         """ Переключится на новую вкладку """
-        return self.driver.switch_to.window(self.driver.window_handles[new_tab])
+        return self.driver.switch_to.window(self.driver.window_handles[tab])
+
+    def switch_new_alert(self):
+        """ Переключится на новое сообщение """
+        return self.driver.switch_to.alert
