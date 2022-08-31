@@ -76,10 +76,18 @@ class BasePage:
             print(colored('Can not get page source', 'red'))
         return source
 
-    def switch_new_tab(self, tab):
+    def switch_new_tab(self, tab_num):
         """ Переключится на новую вкладку """
-        return self.driver.switch_to.window(self.driver.window_handles[tab])
+        return self.driver.switch_to.window(self.driver.window_handles[tab_num])
 
     def switch_new_alert(self):
         """ Переключится на новое сообщение """
         return self.driver.switch_to.alert
+
+    def switch_to_iframe(self, iframe):
+        """ Переключится во фрейм """
+        return self.driver.switch_to.frame(iframe)
+
+    def switch_out_iframe(self):
+        """ Выйти из фрейма. """
+        self.driver.switch_to.default_content()

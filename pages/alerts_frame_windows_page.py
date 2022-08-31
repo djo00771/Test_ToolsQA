@@ -1,7 +1,8 @@
 import random
 import time
 from selenium.common import UnexpectedAlertPresentException
-from locators.alerts_frame_windows_locators import BrowserWindowsLocators, AlertsLocators
+from locators.alerts_frame_windows_locators import BrowserWindowsLocators, AlertsLocators, FrameLocators, \
+    NestedFrameLocators
 from pages.base_page import BasePage
 
 
@@ -29,13 +30,13 @@ class AlertsPage(BasePage):
     locators = AlertsLocators()
 
     def check_alert_button(self):
-        """ Проверка открытия сообщения в браузере """
+        """ Проверка открытия оповещения """
         self.is_visible(self.locators.ALERT_BUTTON).click()
         alert_window = self.switch_new_alert()
         return alert_window.text
 
     def check_alert_apper_5_second(self):
-        """ Проверка открытия сообщения в браузере через 5 сек. """
+        """ Проверка открытия оповещения через 5 сек. """
         self.is_visible(self.locators.TIMER_ALERT_BUTTON).click()
         time.sleep(5)
         # при низкой скорости интернета возникает исключение, в остальном блок try можно исключить
@@ -47,6 +48,7 @@ class AlertsPage(BasePage):
             return alert_window.text
 
     def check_confirm_alert(self):
+        """ Проверка подтверждения действия в окне оповещения """
         self.is_visible(self.locators.CONFIRM_ALERT_BUTTON).click()
         alert_window = self.switch_new_alert()
         alert_window.accept()
@@ -54,6 +56,7 @@ class AlertsPage(BasePage):
         return text_result
 
     def check_prompt_alert(self):
+        """ Проверка ввода текста в окне оповещения """
         text = f'test-autotest {random.randint(0, 900)}'
         self.is_visible(self.locators.PROMPT_ALERT_BUTTON).click()
         alert_window = self.switch_new_alert()
@@ -62,3 +65,41 @@ class AlertsPage(BasePage):
         text_result = self.is_present(self.locators.PROMPT_RESULT).text
         return text, text_result
 
+
+class FramePage(BasePage):
+    """ Фреймы """
+    locators = FrameLocators()
+
+    def check_frame(self, frame_num):
+        """ Проверка двух разных фреймов """
+        if frame_num == 'frame1':
+            frame = self.is_present(self.locators.FRAME1)
+            width = frame.get_attribute('width')
+            height = frame.get_attribute('height')
+            self.switch_to_iframe(frame)
+            text = self.is_present(self.locators.TEXT_FRAME).text
+            self.switch_out_iframe()
+            return [text, width, height]
+
+        if frame_num == 'frame2':
+            frame = self.is_present(self.locators.FRAME2)
+            width = frame.get_attribute('width')
+            height = frame.get_attribute('height')
+            self.switch_to_iframe(frame)
+            text = self.is_present(self.locators.TEXT_FRAME).text
+            self.switch_out_iframe()
+            return [text, width, height]
+
+
+class NestedFramePage(BasePage):
+    """ Вложенные фреймы """
+    locators = NestedFrameLocators()
+
+    def check_nested_frame(self):
+        parent_frame = self.is_present(self.locators.PARENT_FRAME)
+        self.switch_to_iframe(parent_frame)
+        parent_text = self.is_present(self.locators.PARENT_TEXT).text
+        child_frame = self.is_present(self.locators.CHILD_FRAME)
+        self.switch_to_iframe(child_frame)
+        child_text = self.is_present(self.locators.CHILD_TEXT).text
+        return parent_text, child_text
