@@ -1,27 +1,25 @@
-from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage, FramePage, NestedFramePage
+from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage, FramePage, NestedFramePage, ModalDialogsPage
 
 
 class TestAlertsFrameWindow:
 
     class TestBrowserWindowsPage:
-        """ Тест вкладок браузера """
 
         def test_new_tab(self, driver):
-            """ Переключение на новую вкладку """
+            """ Тест переключение на новую вкладку """
             new_tab_page = BrowserWindowsPage(driver, 'https://demoqa.com/browser-windows')
             new_tab_page.open()
             text_result = new_tab_page.check_opened_new_tab()
             assert text_result == 'This is a sample page', "Вкладка не открыта"
 
         def test_new_window(self, driver):
-            """ Переключение на новое окно """
+            """ Тест переключение на новое окно """
             new_tab_page = BrowserWindowsPage(driver, 'https://demoqa.com/browser-windows')
             new_tab_page.open()
             text_result = new_tab_page.check_opened_new_tab()
             assert text_result == 'This is a sample page', "Окно не открыто"
 
     class TestAlertsPage:
-        """ Тест окон оповещения """
 
         def test_see_alert(self, driver):
             """ Тест окна оповещения """
@@ -54,7 +52,6 @@ class TestAlertsFrameWindow:
             assert alert_text == f'You entered {text}', "Текст не совпадает"
 
     class TestFramePage:
-        """ Тест фреймов """
 
         def test_frame(self, driver):
             """ Тест двух фреймов """
@@ -66,7 +63,6 @@ class TestAlertsFrameWindow:
             assert result_frame2 == ['This is a sample page', '100px', '100px'], 'the frame does not exist'
 
     class TestNestedFramesPage:
-        """ Тест вложенных фреймов """
 
         def test_nested_frames(self, driver):
             """ Тест двух вложенных фреймов """
@@ -75,3 +71,14 @@ class TestAlertsFrameWindow:
             parent_result, child_result = nested_frames_page.check_nested_frame()
             assert 'Parent frame' in parent_result, "вы не переключились на фрейм"
             assert 'Child Iframe' in child_result, "вы не переключились на фрейм"
+
+    class TestModalDialogsPage:
+
+        def test_modal_dialog(self, driver):
+            """ Тест модальных окон с разным количеством текста """
+            modal_dialog_page = ModalDialogsPage(driver, 'https://demoqa.com/modal-dialogs')
+            modal_dialog_page.open()
+            small, large = modal_dialog_page.check_modal_dialogs()
+            assert small[1] < large[1]
+            assert small[0] == 'Small Modal'
+            assert large[0] == 'Large Modal'

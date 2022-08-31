@@ -2,7 +2,7 @@ import random
 import time
 from selenium.common import UnexpectedAlertPresentException
 from locators.alerts_frame_windows_locators import BrowserWindowsLocators, AlertsLocators, FrameLocators, \
-    NestedFrameLocators
+    NestedFrameLocators, ModalDialogsPageLocators
 from pages.base_page import BasePage
 
 
@@ -71,7 +71,7 @@ class FramePage(BasePage):
     locators = FrameLocators()
 
     def check_frame(self, frame_num):
-        """ Проверка двух разных фреймов """
+        """ Проверка двух фреймов на странице """
         if frame_num == 'frame1':
             frame = self.is_present(self.locators.FRAME1)
             width = frame.get_attribute('width')
@@ -96,6 +96,7 @@ class NestedFramePage(BasePage):
     locators = NestedFrameLocators()
 
     def check_nested_frame(self):
+        """ Проверка двух вложенных фреймов на странице"""
         parent_frame = self.is_present(self.locators.PARENT_FRAME)
         self.switch_to_iframe(parent_frame)
         parent_text = self.is_present(self.locators.PARENT_TEXT).text
@@ -103,3 +104,22 @@ class NestedFramePage(BasePage):
         self.switch_to_iframe(child_frame)
         child_text = self.is_present(self.locators.CHILD_TEXT).text
         return parent_text, child_text
+
+
+class ModalDialogsPage(BasePage):
+    """ Модальные окна """
+    locators = ModalDialogsPageLocators()
+
+    def check_modal_dialogs(self):
+        """ Проверка модальных окон с разным количеством текста """
+        self.is_visible(self.locators.SMALL_MODAL).click()
+        small_body_text = self.is_visible(self.locators.SMALL_MODAL_TEXT).text
+        small_body_title = self.is_visible(self.locators.SMALL_MODAL_BODY).text
+        self.is_visible(self.locators.SMALL_MODAL_CLOSE).click()
+        self.is_visible(self.locators.LARGE_MODAL).click()
+        large_body_text = self.is_visible(self.locators.LARGE_MODAL_TEXT).text
+        large_body_title = self.is_visible(self.locators.LARGE_MODAL_BODY).text
+        self.is_visible(self.locators.LARGE_MODAL_CLOSE).click()
+        return [small_body_title, len(small_body_text)], [large_body_title, len(large_body_text)]
+
+
