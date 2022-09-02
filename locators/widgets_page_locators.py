@@ -9,3 +9,7 @@ class AccordianPageLocators:
     SECTION_SECOND_TEXT = (By.CSS_SELECTOR, 'div[id="section2Content"] p')
     SECTION_THIRD = (By.CSS_SELECTOR, 'div[id="section3Heading"]')
     SECTION_THIRD_TEXT = (By.CSS_SELECTOR, 'div[id="section3Content"] p')
+
+
+class AutoCompletePageLocators:
+    pass
