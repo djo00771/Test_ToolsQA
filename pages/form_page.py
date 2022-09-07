@@ -7,7 +7,6 @@ from locators.form_page_locators import FormPageLocators
 
 
 class FormPage(BasePage):
-
     locators = FormPageLocators()
 
     def fill_field_and_submit(self):

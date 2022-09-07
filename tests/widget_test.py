@@ -1,4 +1,5 @@
-from pages.widget_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage, TabsPage
+from pages.widget_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage, TabsPage, \
+    ToolTipsPage
 
 
 class TestAccordianPage:
@@ -45,12 +46,14 @@ class TestAutoCompletePage:
 class TestDatePickerPage:
 
     def test_change_date(self, driver):
+        """ Тест выбор даты """
         date_picker_page = DatePickerPage(driver, 'https://demoqa.com/date-picker')
         date_picker_page.open()
         value_date_before, value_date_after = date_picker_page.select_date()
         assert value_date_before != value_date_after, 'the date has not been changed'
 
     def test_change_date_and_time(self, driver):
+        """ Тест выбор даты и времени """
         date_picker_page = DatePickerPage(driver, 'https://demoqa.com/date-picker')
         date_picker_page.open()
         value_date_before, value_date_after = date_picker_page.select_date_and_time()
@@ -60,6 +63,7 @@ class TestDatePickerPage:
 class TestSliderPage:
 
     def test_slider(self, driver):
+        """ Тест передвижение слайдера """
         slider_page = SliderPage(driver, 'https://demoqa.com/slider')
         slider_page.open()
         value_before, value_after = slider_page.check_slider()
@@ -69,12 +73,14 @@ class TestSliderPage:
 class TestProgressBarPage:
 
     def test_progress_bar(self, driver):
+        """ Тест прогресс загрузки """
         progress_bar_page = ProgressBarPage(driver, 'https://demoqa.com/progress-bar')
         progress_bar_page.open()
         before, after = progress_bar_page.check_progress_bar()
         assert before != after, 'Прогресса нет'
 
     def test_full_progress_bar(self, driver):
+        """ Тест полный прогресс загрузки """
         full_progress_bar_page = ProgressBarPage(driver, 'https://demoqa.com/progress-bar')
         full_progress_bar_page.open()
         full_progress = full_progress_bar_page.check_full_progress_bar()
@@ -84,6 +90,7 @@ class TestProgressBarPage:
 class TestTabsPage:
 
     def test_tabs(self, driver):
+        """ Тест вкладок """
         tabs_page = TabsPage(driver, 'https://demoqa.com/tabs')
         tabs_page.open()
         what_button, what_content = tabs_page.check_tabs('what')
@@ -92,3 +99,17 @@ class TestTabsPage:
         assert what_button == 'What' and what_content > 0, 'Текст отсутствует, или название не верно'
         assert origin_button == 'Origin' and origin_content > 0, 'Текст отсутствует, или название не верно'
         assert use_button == 'Use' and origin_content > 0, 'Текст отсутствует, или название не верно'
+
+
+class TestToolTipsPage:
+
+    def test_tool_tips(self, driver):
+        """ Тест подсказок """
+        tool_tips_page = ToolTipsPage(driver, 'https://demoqa.com/tool-tips')
+        tool_tips_page.open()
+        button_text, field_text, contrary_text, section_text = tool_tips_page.check_tool_tips()
+        assert button_text == 'You hovered over the Button', 'Hover missing or incorrect content'
+        assert field_text == 'You hovered over the text field', 'Hover missing or incorrect content'
+        assert contrary_text == 'You hovered over the Contrary', 'Hover missing or incorrect content'
+        assert section_text == 'You hovered over the 1.10.32', 'Hover missing or incorrect content'
+

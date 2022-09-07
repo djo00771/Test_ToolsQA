@@ -11,7 +11,6 @@ from pages.base_page import BasePage
 
 class TextBoxPage(BasePage):
     """ Элементы страницы Text Box"""
-
     locators = TextBoxPageLocators()
 
     def fill_all_fields(self):
@@ -39,7 +38,6 @@ class TextBoxPage(BasePage):
 
 class CheckBoxPage(BasePage):
     """ Элементы страницы Check Box"""
-
     locators = CheckBoxPageLocators()
 
     def open_full_list(self):
@@ -79,7 +77,6 @@ class CheckBoxPage(BasePage):
 
 class RadioButtonPage(BasePage):
     """ Элементы страницы Radio Button """
-
     locators = RadioButtonPageLocators()
 
     def click_on_the_radio_button(self, choice):
@@ -97,7 +94,6 @@ class RadioButtonPage(BasePage):
 
 class WebTablePage(BasePage):
     """ Элементы страницы Web Table """
-
     locators = WebTablePageLocators()
 
     def add_new_person(self):
@@ -178,7 +174,6 @@ class WebTablePage(BasePage):
 
 class ButtonsPage(BasePage):
     """Элементы страницы Buttons """
-
     locators = ButtonsPageLocators()
 
     def click_on_different_button(self, type_click):
@@ -202,7 +197,6 @@ class ButtonsPage(BasePage):
 
 class LinksPage(BasePage):
     """Элементы страницы Links """
-
     locators = LinksPageLocators()
 
     def check_new_tab_simple_link(self):
@@ -227,7 +221,6 @@ class LinksPage(BasePage):
 
 class UploadDownloadFilePage(BasePage):
     """ Загрузка и выгрузка файла """
-
     locators = UploadDownloadFileLocators()
 
     def upload_file(self):
@@ -255,7 +248,6 @@ class UploadDownloadFilePage(BasePage):
 
 class DynamicPropertiesPage(BasePage):
     """ Изменение цвета и видимость кнопок """
-
     locators = DynamicPropertiesLocators()
 
     def check_enable_button(self):

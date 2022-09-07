@@ -9,7 +9,6 @@ class TextBoxPageLocators:
     CURRENT_ADDRESS = (By.CSS_SELECTOR, '#currentAddress')
     PERMANENT_ADDRESS = (By.CSS_SELECTOR, '#permanentAddress')
     SUBMIT = (By.CSS_SELECTOR, 'button[id="submit"]')
-
     # check output
     CREATED_FULL_NAME = (By.CSS_SELECTOR, '#output #name')
     CREATED_EMAIL = (By.CSS_SELECTOR, '#output #email')
@@ -19,7 +18,6 @@ class TextBoxPageLocators:
 
 class CheckBoxPageLocators:
     """ Локаторы для страницы CheckBox """
-
     EXPAND_ALL_BUTTON = (By.CSS_SELECTOR, 'button[title="Expand all"]')
     ITEM_LIST = (By.CSS_SELECTOR, 'span[class="rct-title"]')
     CHECKED_ITEMS = (By.CSS_SELECTOR, 'svg[class="rct-icon rct-icon-check"]')
@@ -29,7 +27,6 @@ class CheckBoxPageLocators:
 
 class RadioButtonPageLocators:
     """ Локаторы для страницы Radio Button """
-
     YES_RADIOBUTTON = (By.CSS_SELECTOR, 'label[class^="custom-control"][for="yesRadio"]')
     IMPRESSIVE_RADIOBUTTON = (By.CSS_SELECTOR, 'label[class^="custom-control"][for="impressiveRadio"]')
     NO_RADIOBUTTON = (By.CSS_SELECTOR, 'label[class^="custom-control"][for="noRadio"]')
@@ -38,7 +35,6 @@ class RadioButtonPageLocators:
 
 class WebTablePageLocators:
     """ Локаторы для страницы Web Table """
-
     # add new person
     ADD_BUTTON = (By.CSS_SELECTOR, '#addNewRecordButton')
     FIRSTNAME_INPUT = (By.CSS_SELECTOR, '#firstName')
@@ -48,7 +44,6 @@ class WebTablePageLocators:
     SALARY_INPUT = (By.CSS_SELECTOR, '#salary')
     DEPARTMENT_INPUT = (By.CSS_SELECTOR, '#department')
     SUBMIT_BUTTON = (By.CSS_SELECTOR, '#submit')
-
     # check output
     FULL_PEOPLE_LIST = (By.CSS_SELECTOR, "div[class='rt-tr-group']")
     SEARCH_INPUT = (By.ID, 'searchBox')
@@ -56,18 +51,15 @@ class WebTablePageLocators:
     ROW_PARENT = ".//ancestor::div[@class='rt-tr-group']"
     NO_ROWS_FOUND = (By.CSS_SELECTOR, 'div[class="rt-noData"]')
     COUNT_ROW_LIST = (By.CSS_SELECTOR, 'select[aria-label="rows per page"]')
-
     # update
     UPDATE_BUTTON = (By.CSS_SELECTOR, 'span[title="Edit"]')
 
 
 class ButtonsPageLocators:
     """ Локаторы для страницы Buttons """
-
     DOUBLE_CLICK_BUTTON = (By.CSS_SELECTOR, 'button[id="doubleClickBtn"]')
     RIGHT_CLICK_BUTTON = (By.CSS_SELECTOR, 'button[id="rightClickBtn"]')
     CLICK_ME_BUTTON = (By.XPATH, "//div[3]/button")
-
     # result
     SUCCESS_DOUBLE = (By.CSS_SELECTOR, 'p[id="doubleClickMessage"]')
     SUCCESS_RIGHT = (By.CSS_SELECTOR, 'p[id="rightClickMessage"]')
@@ -76,14 +68,12 @@ class ButtonsPageLocators:
 
 class LinksPageLocators:
     """ Локаторы для страницы Links """
-
     HOME_LINK = (By.CSS_SELECTOR, "a[id='simpleLink']")
     BAD_REQUEST = (By.CSS_SELECTOR, "a[id='bad-request']")
 
 
 class UploadDownloadFileLocators:
     """ Локаторы для страницы Upload and Download """
-
     UPLOAD_FILE = (By.CSS_SELECTOR, 'input[id="uploadFile"]')
     UPLOADED_FILE = (By.CSS_SELECTOR, 'p[id="uploadedFilePath"]')
     DOWNLOAD_FILE = (By.CSS_SELECTOR, 'a[id="downloadButton"]')
@@ -91,7 +81,6 @@ class UploadDownloadFileLocators:
 
 class DynamicPropertiesLocators:
     """ Локаторы для страницы Dynamic Properties """
-
     COLOR_CHANGE_BUTTON = (By.CSS_SELECTOR, 'button[id="colorChange"]')
     VISIBLE_AFTER_BUTTON = (By.CSS_SELECTOR, 'button[id="visibleAfter"]')
     ENABLE_BUTTON = (By.CSS_SELECTOR, 'button[id="enableAfter"]')

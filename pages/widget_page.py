@@ -7,7 +7,7 @@ from selenium.webdriver.support.select import Select
 from generator.generator import generated_color, generated_date
 from pages.base_page import BasePage
 from locators.widgets_page_locators import AccordianPageLocators, AutoCompletePageLocators, DatePickerPageLocators, \
-    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators
+    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators
 
 
 class AccordianPage(BasePage):
@@ -128,6 +128,7 @@ class SliderPage(BasePage):
     locators = SliderPageLocators()
 
     def check_slider(self):
+        """ Проверка передвижения слайдера """
         value_before = self.is_visible(self.locators.VALUE_INPUT).get_attribute('value')
         slider_input = self.is_visible(self.locators.SLIDER_INPUT)
         self.action_drag_and_drop_by_offset(slider_input, random.randint(0, 100), 0)
@@ -139,6 +140,7 @@ class ProgressBarPage(BasePage):
     locators = ProgressBarPageLocators()
 
     def check_progress_bar(self):
+        """ Проверка прогресса загрузки """
         value_before = self.is_present(self.locators.PROGRESS_VALUE).text
         progress_bar_button = self.is_clickable(self.locators.PROGRESS_INPUT)
         progress_bar_button.click()
@@ -148,6 +150,7 @@ class ProgressBarPage(BasePage):
         return value_before, value_after
 
     def check_full_progress_bar(self):
+        """ Проверка полного прогресса загрузки """
         self.is_visible(self.locators.PROGRESS_INPUT).click()
         time.sleep(12)
         full_progress = self.is_visible(self.locators.FULL_PROGRESS_VALUE).get_attribute('aria-valuenow')
@@ -159,6 +162,7 @@ class TabsPage(BasePage):
     locators = TabsPageLocators()
 
     def check_tabs(self, tabs_name):
+        """ Проверка переключения между вкладками """
         tabs = {'what':
                     {'title': self.locators.WHAT_TITLE,
                      'content': self.locators.WHAT_CONTENT},
@@ -173,3 +177,27 @@ class TabsPage(BasePage):
         button.click()
         what_content = self.is_visible(tabs[tabs_name]['content']).text
         return button.text, len(what_content)
+
+
+class ToolTipsPage(BasePage):
+    locators = ToolTipsPageLocators()
+
+    def get_text_from_tool_tips(self, hover_elem, wait_elem):
+        """ Возврат текста из всплывающих подсказок """
+        element = self.is_present(hover_elem)
+        self.action_move_to_element(element)
+        self.is_visible(wait_elem)
+        time.sleep(1)
+        tool_tip_text = self.is_visible(self.locators.TOOL_TIPS_INNERS)
+        text = tool_tip_text.text
+        return text
+
+    def check_tool_tips(self):
+        """ Проверка всплывающих подсказок """
+        tool_tip_text_button = self.get_text_from_tool_tips(self.locators.BUTTON, self.locators.TOOL_TIP_BUTTON)
+        tool_tip_text_field = self.get_text_from_tool_tips(self.locators.FIELD, self.locators.TOOL_TIP_FIELD)
+        tool_tip_text_contrary = self.get_text_from_tool_tips(self.locators.CONTRARY_LINK,
+                                                              self.locators.TOOL_TIP_CONTRARY)
+        tool_tip_text_section = self.get_text_from_tool_tips(self.locators.SECTION_LINK,
+                                                             self.locators.TOOL_TIP_SECTION)
+        return tool_tip_text_button, tool_tip_text_field, tool_tip_text_contrary, tool_tip_text_section
