@@ -1,4 +1,6 @@
-from selenium.webdriver import ActionChains
+import random
+
+from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from termcolor import colored
@@ -102,4 +104,10 @@ class BasePage:
         """ Перейти к элементу (навести мышь на элемент) """
         action = ActionChains(self.driver)
         action.move_to_element(element)
+        action.perform()
+
+    def send_keys(self, *args):
+        """ Нажать на кнопки клавиатуры """
+        action = ActionChains(self.driver)
+        action.send_keys(*args)
         action.perform()

@@ -1,5 +1,5 @@
 from pages.widget_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgressBarPage, TabsPage, \
-    ToolTipsPage
+    ToolTipsPage, MenuPage, SelectMenuPage
 
 
 class TestAccordianPage:
@@ -113,3 +113,29 @@ class TestToolTipsPage:
         assert contrary_text == 'You hovered over the Contrary', 'Hover missing or incorrect content'
         assert section_text == 'You hovered over the 1.10.32', 'Hover missing or incorrect content'
 
+
+class TestMenuPage:
+
+    def test_menu(self, driver):
+        """ Тест меню """
+        menu_page = MenuPage(driver, 'https://demoqa.com/menu')
+        menu_page.open()
+        data = menu_page.check_menu()
+        assert data == ['Main Item 1', 'Main Item 2', 'Sub Item', 'Sub Item', 'SUB SUB LIST »', 'Sub Sub Item 1',
+                        'Sub Sub Item 2', 'Main Item 3']
+
+
+class TestSelectMenuPage:
+
+    def test_select_menu(self, driver):
+        select_menu_page = SelectMenuPage(driver, 'https://demoqa.com/select-menu')
+        select_menu_page.open()
+        result_text = select_menu_page.check_select_menu()
+        assert result_text[0] == 'Group 2, option 1'
+        assert result_text[1] == 'Mrs.'
+
+    def test_multiselect_menu(self, driver):
+        multiselect_menu_page = SelectMenuPage(driver, 'https://demoqa.com/select-menu')
+        multiselect_menu_page.open()
+        result_text = multiselect_menu_page.check_multiselect_menu()
+        assert result_text == ['Green', 'Blue', 'Black', 'Red']

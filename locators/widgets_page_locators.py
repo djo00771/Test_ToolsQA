@@ -73,3 +73,18 @@ class ToolTipsPageLocators:
     TOOL_TIP_SECTION = (By.CSS_SELECTOR, 'a[aria-describedby="sectionToolTip"]')
 
     TOOL_TIPS_INNERS = (By.CSS_SELECTOR, 'div[class="tooltip-inner"]')
+
+
+class MenuPageLocators:
+
+    MENU = (By.CSS_SELECTOR, 'ul[id="nav"] a ')
+
+
+class SelectMenuPageLocators:
+
+    SELECT_VALUE_INPUT = (By.CSS_SELECTOR, 'div[id="withOptGroup"]')
+    SELECT_ONE_INPUT = (By.CSS_SELECTOR, 'div[id="selectOne"]')
+    SELECT_RESULT_LIST = (By.CSS_SELECTOR, 'div[class=" css-1uccc91-singleValue"]')
+
+    MULTISELECT_INPUT = (By.XPATH, '//*[@id="selectMenuContainer"]/div[7]/div/div/div/div[1]')
+    MULTISELECT_RESULT_LIST = (By.CSS_SELECTOR, 'div[class="css-12jo7m5"]')

@@ -7,7 +7,8 @@ from selenium.webdriver.support.select import Select
 from generator.generator import generated_color, generated_date
 from pages.base_page import BasePage
 from locators.widgets_page_locators import AccordianPageLocators, AutoCompletePageLocators, DatePickerPageLocators, \
-    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators
+    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators, MenuPageLocators, \
+    SelectMenuPageLocators
 
 
 class AccordianPage(BasePage):
@@ -201,3 +202,40 @@ class ToolTipsPage(BasePage):
         tool_tip_text_section = self.get_text_from_tool_tips(self.locators.SECTION_LINK,
                                                              self.locators.TOOL_TIP_SECTION)
         return tool_tip_text_button, tool_tip_text_field, tool_tip_text_contrary, tool_tip_text_section
+
+
+class MenuPage(BasePage):
+    locators = MenuPageLocators()
+
+    def check_menu(self):
+        """ Проверка пунктов меню """
+        menu_list = self.is_all_present(self.locators.MENU)
+        data = []
+        for item in menu_list:
+            self.action_move_to_element(item)
+            data.append(item.text)
+        return data
+
+
+class SelectMenuPage(BasePage):
+    locators = SelectMenuPageLocators()
+
+    def check_select_menu(self):
+        self.is_visible(self.locators.SELECT_VALUE_INPUT).click()
+        self.send_keys(Keys.DOWN, Keys.DOWN, Keys.RETURN)
+        self.is_visible(self.locators.SELECT_ONE_INPUT).click()
+        self.send_keys(Keys.DOWN, Keys.DOWN, Keys.RETURN)
+        result_list = self.is_all_present(self.locators.SELECT_RESULT_LIST)
+        data = []
+        for item in result_list:
+            data.append(item.text)
+        return data
+
+    def check_multiselect_menu(self):
+        self.is_visible(self.locators.MULTISELECT_INPUT).click()
+        self.send_keys(Keys.RETURN, Keys.RETURN, Keys.RETURN, Keys.RETURN)
+        result_list = self.is_all_present(self.locators.MULTISELECT_RESULT_LIST)
+        data = []
+        for i in result_list:
+            data.append(i.text)
+        return data
