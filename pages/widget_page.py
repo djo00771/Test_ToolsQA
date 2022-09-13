@@ -225,17 +225,11 @@ class SelectMenuPage(BasePage):
         self.send_keys(Keys.DOWN, Keys.DOWN, Keys.RETURN)
         self.is_visible(self.locators.SELECT_ONE_INPUT).click()
         self.send_keys(Keys.DOWN, Keys.DOWN, Keys.RETURN)
-        result_list = self.is_all_present(self.locators.SELECT_RESULT_LIST)
-        data = []
-        for item in result_list:
-            data.append(item.text)
-        return data
+        result_list = self.get_sortable_items(self.locators.SELECT_RESULT_LIST)
+        return result_list
 
     def check_multiselect_menu(self):
         self.is_visible(self.locators.MULTISELECT_INPUT).click()
         self.send_keys(Keys.RETURN, Keys.RETURN, Keys.RETURN, Keys.RETURN)
-        result_list = self.is_all_present(self.locators.MULTISELECT_RESULT_LIST)
-        data = []
-        for i in result_list:
-            data.append(i.text)
-        return data
+        result_list = self.get_sortable_items(self.locators.MULTISELECT_RESULT_LIST)
+        return result_list

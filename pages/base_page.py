@@ -95,9 +95,15 @@ class BasePage:
         self.driver.switch_to.default_content()
 
     def action_drag_and_drop_by_offset(self, element, x_coord, y_coord):
-        """ Перетащить с помощью мыши """
+        """ Действие перетаскивание по смещению """
         action = ActionChains(self.driver)
         action.drag_and_drop_by_offset(element, x_coord, y_coord)
+        action.perform()
+
+    def action_drag_and_drop_by_element(self, source, target):
+        """ Действие перетаскивание по элементу """
+        action = ActionChains(self.driver)
+        action.drag_and_drop(source, target)
         action.perform()
 
     def action_move_to_element(self, element):
@@ -111,3 +117,8 @@ class BasePage:
         action = ActionChains(self.driver)
         action.send_keys(*args)
         action.perform()
+
+    def get_sortable_items(self, elements):
+        """ Получить текст из элементов """
+        item_list = self.is_all_visible(elements)
+        return [item.text for item in item_list]
