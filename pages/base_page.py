@@ -43,9 +43,9 @@ class BasePage:
         """ Скролить до элемента """
         self.driver.execute_script("arguments[0].scrollIntoView();", element)
 
-    def remove_element(self):
+    def remove_element(self, element_name):
         """ Удалить элемент со страницы """
-        self.driver.execute_script("document.getElementsByTagName('footer')[0].remove();")
+        self.driver.execute_script(f"document.getElementsByTagName('{element_name}')[0].remove();")
 
     def double_click(self, element):
         """ Двойной клик """
@@ -58,6 +58,11 @@ class BasePage:
         action = ActionChains(self.driver)
         action.context_click(element)
         action.perform()
+
+    def click_random_selectable_item(self, elements):
+        """ Клик по одному элементу из видимых (рандомный) """
+        item_list = self.is_all_visible(elements)
+        random.sample(item_list, k=1)[0].click()
 
     def click(self, element):
         """ Клик левой кнопкой мыши """
@@ -118,7 +123,7 @@ class BasePage:
         action.send_keys(*args)
         action.perform()
 
-    def get_sortable_items(self, elements):
+    def get_text_sortable_items(self, elements):
         """ Получить текст из элементов """
         item_list = self.is_all_visible(elements)
         return [item.text for item in item_list]
