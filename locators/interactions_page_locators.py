@@ -43,3 +43,33 @@ class DroppablePageLocators:
     ACCEPTABLE = (By.CSS_SELECTOR, 'div[id="acceptable"]')
     NOT_ACCEPTABLE = (By.CSS_SELECTOR, 'div[id="notAcceptable"]')
     DROP_HERE_ACCEPT = (By.CSS_SELECTOR, '#acceptDropContainer #droppable')
+
+    # prevent propogation
+    PREVENT_TAB = (By.CSS_SELECTOR, 'a[id="droppableExample-tab-preventPropogation"]')
+    NOT_GREEDY_DROP_BOX_TEXT = (By.CSS_SELECTOR, 'div[id="notGreedyDropBox"] p:nth-child(1)')
+    NOT_GREEDY_INNER_BOX = (By.CSS_SELECTOR, '#notGreedyInnerDropBox')
+    GREEDY_DROP_BOX_TEXT = (By.CSS_SELECTOR, 'div[id="greedyDropBox"] p:nth-child(1)')
+    GREEDY_INNER_BOX = (By.CSS_SELECTOR, '#greedyDropBoxInner')
+    DRAG_ME_PREVENT = (By.CSS_SELECTOR, '#ppDropContainer #dragBox')
+
+    # revert draggable
+    REVERT_TAB = (By.CSS_SELECTOR, 'a[id="droppableExample-tab-revertable"]')
+    WILL_REVERT = (By.CSS_SELECTOR, 'div[id="revertable"]')
+    NOT_REVERT = (By.CSS_SELECTOR, 'div[id="notRevertable"]')
+    REVERT_DROP_BOX = (By.CSS_SELECTOR, 'div[id="revertableDropContainer"] div[id="droppable"]')
+
+
+class DragabblePageLocators:
+
+    # simple
+    SIMPLE_TAB = (By.CSS_SELECTOR, 'a[id="draggableExample-tab-simple"]')
+    DRAG_DIV = (By.CSS_SELECTOR, 'div[id="dragBox"]')
+
+    # axis restricted
+    RESTRICTED_TAB = (By.CSS_SELECTOR, 'a[id="draggableExample-tab-axisRestriction"]')
+    RESTRICTED_X = (By.CSS_SELECTOR, 'div[id="restrictedX"]')
+    RESTRICTED_Y = (By.CSS_SELECTOR, 'div[id="restrictedY"]')
+
+    # container restricted
+    CONTAINER_RESTRICTED_TAB = (By.CSS_SELECTOR, 'a[id="draggableExample-tab-containerRestriction"]')
+    RESTRICTED_DIV = (By.CSS_SELECTOR, 'div[class="draggable ui-widget-content ui-draggable ui-draggable-handle"]')

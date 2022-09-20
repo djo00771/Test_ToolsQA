@@ -1,4 +1,4 @@
-from pages.interactions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage
+from pages.interactions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage, DragabblePage
 
 
 class TestSortablePage:
@@ -45,22 +45,55 @@ class TestResizablePage:
 class TestDroppablePage:
 
     def test_droppable_simple(self, driver):
-        droppable_simple = DroppablePage(driver, 'https://demoqa.com/droppable')
-        droppable_simple.open()
-        text = droppable_simple.check_droppable_simple()
+        droppable_page = DroppablePage(driver, 'https://demoqa.com/droppable')
+        droppable_page.open()
+        text = droppable_page.check_droppable_simple()
         assert text == 'Dropped!', 'the element has not been dropped'
 
     def test_droppable_accept(self, driver):
-        droppable_accept = DroppablePage(driver, 'https://demoqa.com/droppable')
-        droppable_accept.open()
-        non_accept, accept = droppable_accept.check_droppable_accept()
+        droppable_page = DroppablePage(driver, 'https://demoqa.com/droppable')
+        droppable_page.open()
+        non_accept, accept = droppable_page.check_droppable_accept()
         assert non_accept == 'Drop here', 'the dropped element has been accepted'
         assert accept == 'Dropped!', 'the dropped element has not been accepted'
 
     def test_droppable_prevent_propogation(self, driver):
-        droppable_accept = DroppablePage(driver, 'https://demoqa.com/droppable')
-        droppable_accept.open()
+        droppable_page = DroppablePage(driver, 'https://demoqa.com/droppable')
+        droppable_page.open()
+        not_greedy, not_greedy_inner, greedy, greedy_inner = droppable_page.check_droppable_propogation()
+        assert not_greedy == 'Dropped!', 'the elements text has not been changed'
+        assert not_greedy_inner == 'Dropped!', 'the elements text has not been changed'
+        assert greedy == 'Outer droppable', 'the elements text has been changed'
+        assert greedy_inner == 'Dropped!', 'the elements text has not been changed'
 
     def test_droppable_revent_draggable(self, driver):
-        droppable_accept = DroppablePage(driver, 'https://demoqa.com/droppable')
-        droppable_accept.open()
+        droppable_page = DroppablePage(driver, 'https://demoqa.com/droppable')
+        droppable_page.open()
+        after_move, after_revert = droppable_page.check_revert_draggable('will')
+        not_after_move, not_after_revert = droppable_page.check_revert_draggable('not_will')
+        assert after_move != after_revert, 'The element has reverted'
+        assert not_after_move == not_after_revert, 'The element has not reverted'
+
+
+class TestDragabblePage:
+
+    def test_dragabble_simple(self, driver):
+        dragabble_page = DragabblePage(driver, 'https://demoqa.com/dragabble')
+        dragabble_page.open()
+        before, after = dragabble_page.check_dragabble_simple()
+        assert before != after, 'the position of the element has not changed'
+
+    def test_restricted(self, driver):
+        dragabble_page = DragabblePage(driver, 'https://demoqa.com/dragabble')
+        dragabble_page.open()
+        before_x_top, after_x_top, before_y_left, after_y_left = dragabble_page.check_restricted()
+        assert before_x_top == 'top: 0px', 'the position of the "top" has changed'
+        assert after_x_top == 'top: 0px', 'the position of the "top" has changed'
+        assert before_y_left == 'left: 0px', 'the position of the "left" has changed'
+        assert after_y_left == 'left: 0px', 'the position of the "left" has changed'
+
+    def test_container_restricted(self, driver):
+        dragabble_page = DragabblePage(driver, 'https://demoqa.com/dragabble')
+        dragabble_page.open()
+        pos_right = dragabble_page.check_container_restricted()
+        assert pos_right == 'left: 698.005px; top: 107.005px', 'the position of the element outside the frame'

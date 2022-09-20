@@ -1,7 +1,8 @@
 import random
+import time
 
 from locators.interactions_page_locators import SortablePageLocators, SelectablePageLocators, ResizablePageLocators, \
-    DroppablePageLocators
+    DroppablePageLocators, DragabblePageLocators
 from pages.base_page import BasePage
 
 
@@ -92,3 +93,62 @@ class DroppablePage(BasePage):
         self.action_drag_and_drop_by_element(acceptable_div, drop_div)
         drop_text_accept = drop_div.text
         return drop_text_not_accept, drop_text_accept
+
+    def check_droppable_propogation(self):
+        self.is_visible(self.locators.PREVENT_TAB).click()
+        drag_div = self.is_visible(self.locators.DRAG_ME_PREVENT)
+        not_greedy_inner_box = self.is_visible(self.locators.NOT_GREEDY_INNER_BOX)
+        greedy_inner_box = self.is_visible(self.locators.GREEDY_INNER_BOX)
+        self.action_drag_and_drop_by_element(drag_div, not_greedy_inner_box)
+        text_not_greedy_box = self.is_visible(self.locators.NOT_GREEDY_DROP_BOX_TEXT).text
+        text_not_greedy_inner_box = not_greedy_inner_box.text
+        self.action_drag_and_drop_by_element(drag_div, greedy_inner_box)
+        text_greedy_box = self.is_visible(self.locators.GREEDY_DROP_BOX_TEXT).text
+        text_greedy_inner_box = greedy_inner_box.text
+        return text_not_greedy_box, text_not_greedy_inner_box, text_greedy_box, text_greedy_inner_box
+
+    def check_revert_draggable(self, type_drag):
+        drags = {
+            'will': {'revert': self.locators.WILL_REVERT},
+            'not_will': {'revert': self.locators.NOT_REVERT}
+        }
+        self.is_visible(self.locators.REVERT_TAB).click()
+        revert = self.is_visible(drags[type_drag]['revert'])
+        drop_div = self.is_visible(self.locators.REVERT_DROP_BOX)
+        self.action_drag_and_drop_by_element(revert, drop_div)
+        position_after_move = revert.get_attribute('style')
+        time.sleep(1)
+        position_after_revert = revert.get_attribute('style')
+        return position_after_move, position_after_revert
+
+
+class DragabblePage(BasePage):
+    locators = DragabblePageLocators()
+
+    def get_dragabble_position(self, drag_element):
+        self.action_drag_and_drop_by_offset(drag_element, random.randint(100, 200), random.randint(100, 200))
+        before_position = drag_element.get_attribute('style')
+        self.action_drag_and_drop_by_offset(drag_element, random.randint(100, 200), random.randint(100, 200))
+        after_position = drag_element.get_attribute('style')
+        return before_position, after_position
+
+    def check_dragabble_simple(self):
+        self.is_visible(self.locators.SIMPLE_TAB).click()
+        drug_div = self.is_visible(self.locators.DRAG_DIV)
+        before_position, after_position = self.get_dragabble_position(drug_div)
+        return before_position, after_position
+
+    def check_restricted(self):
+        self.is_visible(self.locators.RESTRICTED_TAB).click()
+        restricted_x = self.is_visible(self.locators.RESTRICTED_X)
+        before_x, after_x = self.get_dragabble_position(restricted_x)
+        restricted_y = self.is_visible(self.locators.RESTRICTED_Y)
+        before_y, after_y = self.get_dragabble_position(restricted_y)
+        return before_x[-9:-1], after_x[-9:-1], before_y[-22:-13], after_y[-22:-13]
+
+    def check_container_restricted(self):
+        self.is_visible(self.locators.CONTAINER_RESTRICTED_TAB).click()
+        drag_div = self.is_visible(self.locators.RESTRICTED_DIV)
+        self.action_drag_and_drop_by_offset(drag_div, 720, 120)
+        pos_right = drag_div.get_attribute('style')
+        return pos_right[-32:-1]
