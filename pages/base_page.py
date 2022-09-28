@@ -43,9 +43,9 @@ class BasePage:
         """ Скролить до элемента """
         self.driver.execute_script("arguments[0].scrollIntoView();", element)
 
-    def remove_element(self, element_name):
+    def remove_element(self, element_name, elem_index):
         """ Удалить элемент со страницы """
-        self.driver.execute_script(f"document.getElementsByTagName('{element_name}')[0].remove();")
+        self.driver.execute_script(f"document.getElementsByTagName('{element_name}')[{elem_index}].remove();")
 
     def double_click(self, element):
         """ Двойной клик """

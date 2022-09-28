@@ -2,6 +2,8 @@ import base64
 import os
 import random
 import time
+
+import allure
 import requests
 from selenium.common import TimeoutException
 from generator.generator import generated_person, generated_file_for_test_elements
@@ -13,22 +15,24 @@ class TextBoxPage(BasePage):
     """ Элементы страницы Text Box"""
     locators = TextBoxPageLocators()
 
+    @allure.step('Заполнить все поля и отправить')
     def fill_all_fields(self):
-        """ Заполнить и отправить поля формы Text Box """
         person_info = next(generated_person())
         full_name = person_info.full_name
         email = person_info.email
         current_address = person_info.current_address
         permanent_address = person_info.permanent_address
-        self.is_visible(self.locators.FULL_NAME).send_keys(full_name)
-        self.is_visible(self.locators.EMAIL).send_keys(email)
-        self.is_visible(self.locators.CURRENT_ADDRESS).send_keys(current_address)
-        self.is_visible(self.locators.PERMANENT_ADDRESS).send_keys(permanent_address)
-        self.is_visible(self.locators.SUBMIT).click()
+        with allure.step('Заполнение данными'):
+            self.is_visible(self.locators.FULL_NAME).send_keys(full_name)
+            self.is_visible(self.locators.EMAIL).send_keys(email)
+            self.is_visible(self.locators.CURRENT_ADDRESS).send_keys(current_address)
+            self.is_visible(self.locators.PERMANENT_ADDRESS).send_keys(permanent_address)
+        with allure.step('Клик по кнопке "Отправить данные"'):
+            self.is_visible(self.locators.SUBMIT).click()
         return full_name, email, current_address, permanent_address
 
+    @allure.step('Проверить заполненную форму')
     def check_filled_form(self):
-        """ Проверка из ответа """
         full_name = self.is_present(self.locators.CREATED_FULL_NAME).text.split(':')[1]
         email = self.is_present(self.locators.CREATED_EMAIL).text.split(':')[1]
         current_address = self.is_present(self.locators.CREATED_CURRENT_ADDRESS).text.split(':')[1]
@@ -40,12 +44,12 @@ class CheckBoxPage(BasePage):
     """ Элементы страницы Check Box"""
     locators = CheckBoxPageLocators()
 
+    @allure.step('Открыть весь список чек боксов')
     def open_full_list(self):
-        """ Открыть все чек боксы """
         self.is_visible(self.locators.EXPAND_ALL_BUTTON).click()
 
+    @allure.step('Рандомно кликнуть по чек боксам')
     def click_random_checkbox(self):
-        """ Кликнуть по чек боксам рандомно """
         item_list = self.is_all_visible(self.locators.ITEM_LIST)
         count = 21
         while count != 0:
@@ -57,8 +61,8 @@ class CheckBoxPage(BasePage):
             else:
                 break
 
+    @allure.step('Вернуть результат клика')
     def get_checked_checkboxes(self):
-        """ Вернуть результат клика """
         checked_list = self.is_all_present(self.locators.CHECKED_ITEMS)
         data = []
         for box in checked_list:
@@ -66,8 +70,8 @@ class CheckBoxPage(BasePage):
             data.append(title_item.text)
         return str(data).replace(' ', '').replace('doc', '').replace('.', '').lower()
 
+    @allure.step('Вернуть результат вывода')
     def get_output_result(self):
-        """ Вернуть результат вывода """
         result_list = self.is_all_present(self.locators.OUTPUT_RESULT)
         data = []
         for item in result_list:
@@ -79,16 +83,16 @@ class RadioButtonPage(BasePage):
     """ Элементы страницы Radio Button """
     locators = RadioButtonPageLocators()
 
+    @allure.step('Кликнуть по кнопкам')
     def click_on_the_radio_button(self, choice):
-        """ Кликнуть по кнопкам """
         choices = {'yes': self.locators.YES_RADIOBUTTON,
                    'impressive': self.locators.IMPRESSIVE_RADIOBUTTON,
                    'no': self.locators.NO_RADIOBUTTON}
 
         self.is_visible(choices[choice]).click()
 
+    @allure.step('Вернуть результат клика')
     def get_output_result(self):
-        """ Вернуть результат клика """
         return self.is_present(self.locators.OUTPUT_RESULT).text
 
 
@@ -96,8 +100,8 @@ class WebTablePage(BasePage):
     """ Элементы страницы Web Table """
     locators = WebTablePageLocators()
 
+    @allure.step('Добавление нового пользователя в форму Web Table')
     def add_new_person(self):
-        """ Добавление нового пользователя в форму Web Table """
         count = 1
         while count != 0:
             person_info = next(generated_person())
@@ -107,14 +111,16 @@ class WebTablePage(BasePage):
             age = person_info.age
             salary = person_info.salary
             department = person_info.department
-            self.is_visible(self.locators.ADD_BUTTON).click()
-            self.is_visible(self.locators.FIRSTNAME_INPUT).send_keys(first_name)
-            self.is_visible(self.locators.LASTNAME_INPUT).send_keys(last_name)
-            self.is_visible(self.locators.EMAIL_INPUT).send_keys(email)
-            self.is_visible(self.locators.AGE_INPUT).send_keys(age)
-            self.is_visible(self.locators.SALARY_INPUT).send_keys(salary)
-            self.is_visible(self.locators.DEPARTMENT_INPUT).send_keys(department)
-            self.is_visible(self.locators.SUBMIT_BUTTON).click()
+            with allure.step('Ввести и отправить данные'):
+                self.is_visible(self.locators.ADD_BUTTON).click()
+                self.is_visible(self.locators.FIRSTNAME_INPUT).send_keys(first_name)
+                self.is_visible(self.locators.LASTNAME_INPUT).send_keys(last_name)
+                self.is_visible(self.locators.EMAIL_INPUT).send_keys(email)
+                self.is_visible(self.locators.AGE_INPUT).send_keys(age)
+                self.is_visible(self.locators.SALARY_INPUT).send_keys(salary)
+                self.is_visible(self.locators.DEPARTMENT_INPUT).send_keys(department)
+            with allure.step('Отправить данные'):
+                self.is_visible(self.locators.SUBMIT_BUTTON).click()
             count -= 1
             return [first_name, last_name, str(age), email, str(salary), department]
 
@@ -126,36 +132,38 @@ class WebTablePage(BasePage):
             data.append(item.text.splitlines())
         return data
 
+    @allure.step('Поиск пользователя')
     def search_come_person(self, key_word):
-        """ Поиск пользователя """
         self.is_present(self.locators.SEARCH_INPUT).send_keys(key_word)
 
+    @allure.step('Проверка результатов поиска пользователя')
     def check_search_person(self):
-        """ Проверка результатов поиска пользователя """
         delete_button = self.is_present(self.locators.DELETE_BUTTON)
         row = delete_button.find_element("xpath", self.locators.ROW_PARENT)
         return row.text.splitlines()
 
+    @allure.step('Обновления информации о пользователе')
     def update_person_info(self):
-        """ Обновления информации о пользователе """
         person_info = next(generated_person())
         age = person_info.age
-        self.is_visible(self.locators.UPDATE_BUTTON).click()
-        self.is_visible(self.locators.AGE_INPUT).clear()
-        self.is_visible(self.locators.AGE_INPUT).send_keys(age)
-        self.is_visible(self.locators.SUBMIT_BUTTON).click()
+        with allure.step('Ввести данные и отправить'):
+            self.is_visible(self.locators.UPDATE_BUTTON).click()
+            self.is_visible(self.locators.AGE_INPUT).clear()
+            self.is_visible(self.locators.AGE_INPUT).send_keys(age)
+        with allure.step('Отправить данные'):
+            self.is_visible(self.locators.SUBMIT_BUTTON).click()
         return str(age)
 
+    @allure.step('Удаление пользователя')
     def delete_person(self):
-        """ Удаление пользователя """
         self.is_visible(self.locators.DELETE_BUTTON).click()
 
+    @allure.step('Проверка удаления пользователя')
     def check_delete(self):
-        """ Проверка удаления пользователя """
         return self.is_present(self.locators.NO_ROWS_FOUND).text
 
+    @allure.step('Выбор количества строк')
     def select_up_to_come_rows(self):
-        """ Увеличение количества строк """
         count = [5, 10, 20, 25]
         data = []
         for x in count:
@@ -166,8 +174,8 @@ class WebTablePage(BasePage):
             data.append(self.check_count_rows())
         return data
 
+    @allure.step('Проверка количества строк')
     def check_count_rows(self):
-        """ Проверка фактического количества строк """
         list_round = self.is_all_present(self.locators.FULL_PEOPLE_LIST)
         return len(list_round)
 
@@ -176,8 +184,8 @@ class ButtonsPage(BasePage):
     """Элементы страницы Buttons """
     locators = ButtonsPageLocators()
 
+    @allure.step('Проверка клика: double click, right click, dynamic click')
     def click_on_different_button(self, type_click):
-        """ Проверка клика: double click, right click, dynamic click """
         if type_click == 'double':
             self.double_click(self.is_visible(self.locators.DOUBLE_CLICK_BUTTON))
             return self.check_click_on_button(self.locators.SUCCESS_DOUBLE)
@@ -190,8 +198,8 @@ class ButtonsPage(BasePage):
             self.is_visible(self.locators.CLICK_ME_BUTTON).click()
             return self.check_click_on_button(self.locators.SUCCESS_CLICK_ME)
 
+    @allure.step('Возврат результата кликов')
     def check_click_on_button(self, element):
-        """ Возврат результата кликов """
         return self.is_present(element).text
 
 
@@ -253,7 +261,7 @@ class DynamicPropertiesPage(BasePage):
     def check_enable_button(self):
         """ Проверка clickable """
         try:
-            self.is_clickable(self.locators.ENABLE_BUTTON)
+            self.is_clickable(self.locators.ENABLE_BUTTON, 6)
         except TimeoutException:
             return False
         return True
@@ -269,7 +277,7 @@ class DynamicPropertiesPage(BasePage):
     def check_appear_of_button(self):
         """ Проверка появление через 5 секунд """
         try:
-            self.is_visible(self.locators.VISIBLE_AFTER_BUTTON)
+            self.is_visible(self.locators.VISIBLE_AFTER_BUTTON, 6)
         except TimeoutException:
             return False
         return True
